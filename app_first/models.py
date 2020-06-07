@@ -24,3 +24,8 @@ class Book(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
 
+class Friend(models.Model):
+    full_name = models.TextField()
+    books = models.ManyToManyField(Book)
+    def __str__(self):
+        return self.full_name

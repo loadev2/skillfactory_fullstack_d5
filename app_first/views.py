@@ -1,7 +1,11 @@
 from django.shortcuts import render, redirect
-from app_first.models import Book, Publisher
+from app_first.models import Author, Book, Publisher, Friend
+from app_first.forms import AuthorForm
 from django.http import HttpResponse
 from django.template import loader
+from django.views.generic import CreateView, ListView
+from django.urls import reverse_lazy
+
 
 # Create your views here.
 def books_list(request):
@@ -68,3 +72,33 @@ def book_decrement(request):
         return redirect('/index/')
     else:
         return redirect('/index/')
+
+def friends_list(request):
+    template = loader.get_template('friends.html')
+    friends = Friend.objects.prefetch_related('books')
+    friends_list=[];
+
+    for friend in friends:
+        books = [item.title for item in friend.books.all()]
+        friends_list.append({
+            'full_name': friend.full_name,
+            'books': books,
+        })
+
+    friend_data = {
+        "title": "List of friends and their books",
+        "friends": friends_list,
+    }
+    return HttpResponse(template.render(friend_data, request))
+
+class AuthorEdit(CreateView):
+    model = Author
+    form_class = AuthorForm
+    success_url = reverse_lazy('author_list')
+    template_name = 'author_edit.html'
+
+class AuthorList(ListView):
+    model = Author
+    template_name = 'authors_list.html'
+
+

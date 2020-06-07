@@ -1,5 +1,5 @@
 from django.contrib import admin
-from app_first.models import Book, Author, Publisher
+from app_first.models import Book, Author, Publisher, Friend
 
 
 # Register your models here.
@@ -20,6 +20,11 @@ class BookAdmin(admin.ModelAdmin):
 class AuthorAdmin(admin.ModelAdmin):
     pass
 
+@admin.register(Friend)
+class FriendAdmin(admin.ModelAdmin):
+    pass
+
 @admin.register(Publisher)
 class PublisherAdmin(admin.ModelAdmin):
     list_display = ('title', )
+
